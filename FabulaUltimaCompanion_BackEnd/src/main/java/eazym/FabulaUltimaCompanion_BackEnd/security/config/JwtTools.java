@@ -13,7 +13,7 @@ import java.util.Date;
 public class JwtTools {
 
     @Value("${spring.jwt.secret}")
-    private String secretKey;
+    String secretKey;
 
     public String createToken(User user) {
 
