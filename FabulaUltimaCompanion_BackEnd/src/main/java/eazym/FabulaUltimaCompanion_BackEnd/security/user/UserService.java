@@ -67,23 +67,21 @@ public class UserService {
     }
 
     //GET USER BY ID
-    public User findById(UUID id) throws NotFoundException {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+    public User findById(UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("ID not found: " + id));
     }
 
     //GET USER BY EMAIL
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("User not found: " + email));
+                .orElseThrow(() -> new NotFoundException("Mail not found: " + email));
     }
 
     //DELETE A USER BY ID
-    public void findByIdAndDelete(UUID id) throws NotFoundException {
-
+    public void findByIdAndDelete(UUID id) {
         User foundUser = this.findById(id);
-
         userRepository.delete(foundUser);
-
     }
 
     //GET CURRENT USER
@@ -93,17 +91,12 @@ public class UserService {
 
         String currentUserName = auth.getName();
 
-        User foundUser = userRepository.findByEmail(currentUserName)
-                .orElseThrow(() -> new NotFoundException("Mail not found: " + currentUserName));
-
-        System.out.println("User found: " + foundUser.getLastname() + " " + foundUser.getFirstname());
-
-        return foundUser;
+        return this.findByEmail(currentUserName);
 
     }
 
     //MODIFY CURRENT USER
-    public User updateCurrentUserInfo(UserInfoPayload infoBody) throws NotFoundException{
+    public User updateCurrentUserInfo(UserInfoPayload infoBody){
 
         User foundUser = this.getCurrentUser();
 
@@ -117,10 +110,8 @@ public class UserService {
     }
 
     //DELETE CURRENT USER
-    public void deleteCurrentUser() throws NotFoundException {
-
+    public void deleteCurrentUser() {
         User currentUser = this.getCurrentUser();
-
         userRepository.delete(currentUser);
     }
 
